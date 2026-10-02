@@ -1,0 +1,354 @@
+{
+	"id": "b53661e9-84e5-4477-99c6-4b595d95fd28",
+	"name": "EcoEat API - Chef Virtual Anti-Desperdicio",
+	"timestamp": "2026-10-02T02:22:27.384Z",
+	"collection_id": "45280167-a9c1bd73-6d3c-432b-8815-7bd6d9e899c8",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 22,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-10-02T02:22:22.662Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "ddd41425-4cda-43d4-be52-fa498242eb33",
+			"name": "1. GET Ingredientes sugeridos",
+			"url": "http://localhost:5000/api/ingredientes/sugeridos",
+			"time": 51,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 OK": true,
+				"Respuesta es JSON": true,
+				"ok = true": true,
+				"ingredientes es una lista no vacía": true
+			},
+			"testPassFailCounts": {
+				"Status 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Respuesta es JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"ok = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"ingredientes es una lista no vacía": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				51
+			],
+			"allTests": [
+				{
+					"Status 200 OK": true,
+					"Respuesta es JSON": true,
+					"ok = true": true,
+					"ingredientes es una lista no vacía": true
+				}
+			]
+		},
+		{
+			"id": "acee2593-55b1-4578-974d-d43397332cd0",
+			"name": "2. POST Generar receta (IA Gemini)",
+			"url": "http://localhost:5000/api/receta/generar",
+			"time": 3075,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201 Created": true,
+				"Respuesta es JSON": true,
+				"Receta con estructura completa": true,
+				"Tiempo de respuesta < 60s": true
+			},
+			"testPassFailCounts": {
+				"Status 201 Created": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Respuesta es JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Receta con estructura completa": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Tiempo de respuesta < 60s": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3075
+			],
+			"allTests": [
+				{
+					"Status 201 Created": true,
+					"Respuesta es JSON": true,
+					"Receta con estructura completa": true,
+					"Tiempo de respuesta < 60s": true
+				}
+			]
+		},
+		{
+			"id": "972438f0-017a-45ac-a671-3d68c7a7cadf",
+			"name": "2b. POST Receta demo (sin IA, respaldo)",
+			"url": "http://localhost:5000/api/historial/demo",
+			"time": 9,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201 Created": true,
+				"Tiene id": true
+			},
+			"testPassFailCounts": {
+				"Status 201 Created": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Tiene id": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status 201 Created": true,
+					"Tiene id": true
+				}
+			]
+		},
+		{
+			"id": "824477bd-0ef4-4d18-8942-feaba5f51ca2",
+			"name": "3. GET Historial",
+			"url": "http://localhost:5000/api/historial",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 OK": true,
+				"recetas es lista y total coincide": true
+			},
+			"testPassFailCounts": {
+				"Status 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"recetas es lista y total coincide": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status 200 OK": true,
+					"recetas es lista y total coincide": true
+				}
+			]
+		},
+		{
+			"id": "398ec8a7-6e60-4862-bb1b-070712a08179",
+			"name": "4. PUT Marcar favorito",
+			"url": "http://localhost:5000/api/historial/favorito",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 OK": true,
+				"Respuesta es JSON": true,
+				"La receta quedó como favorita": true
+			},
+			"testPassFailCounts": {
+				"Status 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Respuesta es JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"La receta quedó como favorita": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status 200 OK": true,
+					"Respuesta es JSON": true,
+					"La receta quedó como favorita": true
+				}
+			]
+		},
+		{
+			"id": "1cdbda06-5a92-43d8-8c3d-1b0976d28c84",
+			"name": "4b. PUT Desmarcar favorito",
+			"url": "http://localhost:5000/api/historial/favorito",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 OK": true,
+				"favorito = false": true
+			},
+			"testPassFailCounts": {
+				"Status 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"favorito = false": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status 200 OK": true,
+					"favorito = false": true
+				}
+			]
+		},
+		{
+			"id": "e88fea79-43f7-4af8-b14f-a6dccb527364",
+			"name": "5. DELETE Eliminar receta",
+			"url": "http://localhost:5000/api/historial/b14bac72",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 OK": true,
+				"Respuesta es JSON": true,
+				"Se eliminó la receta correcta": true
+			},
+			"testPassFailCounts": {
+				"Status 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Respuesta es JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Se eliminó la receta correcta": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status 200 OK": true,
+					"Respuesta es JSON": true,
+					"Se eliminó la receta correcta": true
+				}
+			]
+		},
+		{
+			"id": "4d026f3e-41a9-45bb-a98c-64e805c1452b",
+			"name": "6. DELETE Receta inexistente (404 esperado)",
+			"url": "http://localhost:5000/api/historial/b14bac72",
+			"time": 8,
+			"responseCode": {
+				"code": 404,
+				"name": "NOT FOUND"
+			},
+			"tests": {
+				"Status 404 al borrar de nuevo": true,
+				"Mensaje de error en JSON": true
+			},
+			"testPassFailCounts": {
+				"Status 404 al borrar de nuevo": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensaje de error en JSON": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Status 404 al borrar de nuevo": true,
+					"Mensaje de error en JSON": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 3179,
+	"collection": {
+		"requests": [
+			{
+				"id": "ddd41425-4cda-43d4-be52-fa498242eb33",
+				"method": "GET"
+			},
+			{
+				"id": "acee2593-55b1-4578-974d-d43397332cd0",
+				"method": "POST"
+			},
+			{
+				"id": "972438f0-017a-45ac-a671-3d68c7a7cadf",
+				"method": "POST"
+			},
+			{
+				"id": "824477bd-0ef4-4d18-8942-feaba5f51ca2",
+				"method": "GET"
+			},
+			{
+				"id": "398ec8a7-6e60-4862-bb1b-070712a08179",
+				"method": "PUT"
+			},
+			{
+				"id": "1cdbda06-5a92-43d8-8c3d-1b0976d28c84",
+				"method": "PUT"
+			},
+			{
+				"id": "e88fea79-43f7-4af8-b14f-a6dccb527364",
+				"method": "DELETE"
+			},
+			{
+				"id": "4d026f3e-41a9-45bb-a98c-64e805c1452b",
+				"method": "DELETE"
+			}
+		]
+	}
+}
