@@ -1,0 +1,165 @@
+{
+  "info": {
+    "name": "EcoEat API - Chef Virtual Anti-Desperdicio",
+    "description": "Pruebas de los 4 métodos HTTP (GET, POST, PUT, DELETE) del backend Flask. Ejecutar en orden con el Collection Runner.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "recetaId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. GET Ingredientes sugeridos",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/ingredientes/sugeridos"
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+          "pm.test('Respuesta es JSON', () => pm.response.to.be.json);",
+          "const body = pm.response.json();",
+          "pm.test('ok = true', () => pm.expect(body.ok).to.be.true);",
+          "pm.test('ingredientes es una lista no vacía', () => {",
+          "  pm.expect(body.ingredientes).to.be.an('array').that.is.not.empty;",
+          "  body.ingredientes.forEach(i => pm.expect(i).to.be.a('string'));",
+          "});"
+        ]}
+      }]
+    },
+    {
+      "name": "2. POST Generar receta (IA Gemini)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/receta/generar",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ingredientes\": [\"Arroz\", \"Huevo\", \"Tomate\", \"Cebolla\"]\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 201 Created', () => pm.response.to.have.status(201));",
+          "pm.test('Respuesta es JSON', () => pm.response.to.be.json);",
+          "const r = pm.response.json().receta;",
+          "pm.test('Receta con estructura completa', () => {",
+          "  pm.expect(r).to.include.all.keys('id','titulo','tiempo','ingredientes','pasos','favorito');",
+          "  pm.expect(r.titulo).to.be.a('string').and.not.empty;",
+          "  pm.expect(r.ingredientes).to.be.an('array').that.is.not.empty;",
+          "  pm.expect(r.pasos).to.be.an('array').that.is.not.empty;",
+          "  pm.expect(r.favorito).to.be.false;",
+          "});",
+          "pm.test('Tiempo de respuesta < 60s', () => pm.expect(pm.response.responseTime).to.be.below(60000));",
+          "if (r && r.id) pm.collectionVariables.set('recetaId', r.id);"
+        ]}
+      }]
+    },
+    {
+      "name": "2b. POST Receta demo (sin IA, respaldo)",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/historial/demo",
+        "description": "Crea una receta de ejemplo sin consumir la API de IA. Útil si no hay API key o cuota."
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 201 Created', () => pm.response.to.have.status(201));",
+          "const r = pm.response.json().receta;",
+          "pm.test('Tiene id', () => pm.expect(r.id).to.be.a('string'));",
+          "if (!pm.collectionVariables.get('recetaId')) pm.collectionVariables.set('recetaId', r.id);"
+        ]}
+      }]
+    },
+    {
+      "name": "3. GET Historial",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/historial" },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+          "const b = pm.response.json();",
+          "pm.test('recetas es lista y total coincide', () => {",
+          "  pm.expect(b.recetas).to.be.an('array');",
+          "  pm.expect(b.total).to.eql(b.recetas.length);",
+          "});"
+        ]}
+      }]
+    },
+    {
+      "name": "4. PUT Marcar favorito",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/historial/favorito",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{recetaId}}\",\n  \"favorito\": true\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+          "pm.test('Respuesta es JSON', () => pm.response.to.be.json);",
+          "const b = pm.response.json();",
+          "pm.test('La receta quedó como favorita', () => {",
+          "  pm.expect(b.receta.id).to.eql(pm.collectionVariables.get('recetaId'));",
+          "  pm.expect(b.receta.favorito).to.be.true;",
+          "});"
+        ]}
+      }]
+    },
+    {
+      "name": "4b. PUT Desmarcar favorito",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/historial/favorito",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{recetaId}}\",\n  \"favorito\": false\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+          "pm.test('favorito = false', () => pm.expect(pm.response.json().receta.favorito).to.be.false);"
+        ]}
+      }]
+    },
+    {
+      "name": "5. DELETE Eliminar receta",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/historial/{{recetaId}}" },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+          "pm.test('Respuesta es JSON', () => pm.response.to.be.json);",
+          "const b = pm.response.json();",
+          "pm.test('Se eliminó la receta correcta', () => {",
+          "  pm.expect(b.ok).to.be.true;",
+          "  pm.expect(b.id).to.eql(pm.collectionVariables.get('recetaId'));",
+          "});"
+        ]}
+      }]
+    },
+    {
+      "name": "6. DELETE Receta inexistente (404 esperado)",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/historial/{{recetaId}}" },
+      "event": [{
+        "listen": "test",
+        "script": { "type": "text/javascript", "exec": [
+          "pm.test('Status 404 al borrar de nuevo', () => pm.response.to.have.status(404));",
+          "pm.test('Mensaje de error en JSON', () => pm.expect(pm.response.json().error).to.be.a('string'));",
+          "pm.collectionVariables.set('recetaId', '');"
+        ]}
+      }]
+    }
+  ]
+}

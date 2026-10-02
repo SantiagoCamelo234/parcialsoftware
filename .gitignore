@@ -1,0 +1,12 @@
+# Secretos (API key de Gemini) — NUNCA subir
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Editores / SO
+.vscode/
+.DS_Store
+Thumbs.db
